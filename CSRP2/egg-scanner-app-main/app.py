@@ -9,7 +9,7 @@ import base64
 app = Flask(__name__)
 
 # Load the model once at startup
-model = load_model('best_egg_quality_model.h5')
+model = load_model('final_hybrid_model.h5')
 
 feature_names = [
     "Yolk Score",
@@ -46,20 +46,30 @@ def predict():
         return jsonify({'error': 'No file selected'}), 400
 
     try:
+        # Read file content safely
         image_bytes = file.read()
+
+        if len(image_bytes) == 0:
+            return jsonify({'error': 'Empty file uploaded'}), 400
+
+        # Process image
         img = preprocess_image(image_bytes)
         img = np.expand_dims(img, axis=0)
 
-        prediction = model.predict(img)[0]
-        prediction = np.clip(prediction, 0, 1)  # keep values between 0 and 1
+        # Make prediction
+        prediction = model.predict(img, verbose=0)
 
-        yolk_score = prediction[0] * 100
-        white_score = prediction[1] * 100
+        # Model returns a list, first element contains yolk and white scores
+        scores = prediction[0][0]  # Get the first output, then first batch item
+        scores = np.clip(scores, 0, 1)  # keep values between 0 and 1
+
+        yolk_score = scores[0] * 100
+        white_score = scores[1] * 100
         egg_quality_score = (yolk_score + white_score) / 2
 
-        if egg_quality_score >= 80:
+        if egg_quality_score >= 70:
             quality = "GOOD"
-        elif egg_quality_score >= 60:
+        elif egg_quality_score >= 40:
             quality = "MEDIUM"
         else:
             quality = "BAD"
@@ -74,7 +84,10 @@ def predict():
         return jsonify(result)
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        # Log the error type and message
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        print(f"Prediction error: {error_msg}")
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/predict-tray', methods=['POST'])
 def predict_tray():

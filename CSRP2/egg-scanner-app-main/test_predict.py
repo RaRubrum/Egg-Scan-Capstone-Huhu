@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from tensorflow.keras.models import load_model
 
-MODEL_PATH = "best_egg_quality_model.h5"
+MODEL_PATH = "final_hybrid_model.h5"
 model = load_model(MODEL_PATH)
 
 feature_names = ["Yolk Score", "White Score"]

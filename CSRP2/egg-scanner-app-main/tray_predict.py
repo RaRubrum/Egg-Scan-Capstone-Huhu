@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 
-MODEL_PATH = "best_egg_quality_model.h5"
+MODEL_PATH = "final_hybrid_model.h5"
 model = load_model(MODEL_PATH)
 
 SAVE_DEBUG = True
@@ -27,7 +27,7 @@ def preprocess_crop(crop):
 def predict_egg_quality(image_bgr, box):
     x, y, w, h = box
     crop = image_bgr[y:y+h, x:x+w]
-    preds = model.predict(preprocess_crop(crop), verbose=0)[0]
+    preds = model.predict(preprocess_crop(crop), verbose=0)[0][0]
     preds = np.clip(preds, 0, 1)
 
     yolk = preds[0] * 100
@@ -35,10 +35,10 @@ def predict_egg_quality(image_bgr, box):
 
     egg_quality = (yolk + white) / 2
 
-    if egg_quality >= 55:
+    if egg_quality >= 70:
         label = "GOOD"
         color = (0, 255, 0)
-    elif egg_quality >= 30:
+    elif egg_quality >= 40:
         label = "MEDIUM"
         color = (0, 255, 255)
     else:
