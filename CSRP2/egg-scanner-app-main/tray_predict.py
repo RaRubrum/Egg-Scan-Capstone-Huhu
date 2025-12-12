@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 
-MODEL_PATH = "final_hybrid_model.h5"
+MODEL_PATH = "best_classification_model.h5"
 model = load_model(MODEL_PATH)
 
 SAVE_DEBUG = True

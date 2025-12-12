@@ -9,7 +9,7 @@ import base64
 app = Flask(__name__)
 
 # Load the model once at startup
-model = load_model('final_hybrid_model.h5')
+model = load_model('best_classification_model.h5')
 
 feature_names = [
     "Yolk Score",
