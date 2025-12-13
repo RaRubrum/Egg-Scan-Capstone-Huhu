@@ -19,17 +19,25 @@ from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 
-# Load model lazily to reduce startup memory
+# Model will be loaded only when needed
 model = None
 
 def get_model():
     global model
     if model is None:
-        # Force garbage collection before loading
+        import sys
+        print(f"Memory before model load: {sys.getsizeof(locals())}")
+        
+        # Force aggressive garbage collection
         gc.collect()
-        model = load_model('final_hybrid_model.h5')
-        # Force garbage collection after loading
+        
+        # Load with minimal memory footprint
+        model = load_model('final_hybrid_model.h5', compile=False)
+        
+        # More garbage collection
         gc.collect()
+        
+        print(f"Model loaded successfully")
     return model
 
 feature_names = [
@@ -48,6 +56,10 @@ def preprocess_image(image_bytes):
     img = cv2.resize(img, (224, 224))
     img = img / 255.0
     return img
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'healthy', 'model_loaded': model is not None})
 
 @app.route('/')
 def index():

@@ -104,16 +104,7 @@
                         <div class="status-label fresh-status">FRESH</div>
                     </div>
                     
-                    <div class="result-metrics">
-                        <div class="metric">
-                            <span class="metric-label">YOLK:</span>
-                            <span class="metric-value">90%</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">EGG WHITE</span>
-                            <span class="metric-value">95%</span>
-                        </div>
-                    </div>
+
                     
                     <div class="gauge-container">
                         <img src="images/gauge.png" alt="Quality Gauge" class="quality-gauge zoomable" loading="lazy">
@@ -372,12 +363,7 @@
                 statusLabel.classList.add('bad-status');
             }
 
-            // Update metrics
-            const yolkMetric = document.querySelector('.metric-value');
-            const whiteMetric = document.querySelectorAll('.metric-value')[1];
-
-            yolkMetric.textContent = result.yolk_score + '%';
-            whiteMetric.textContent = result.white_score + '%';
+            // Metrics removed - only showing overall quality
         }
     </script>
 
