@@ -1,8 +1,12 @@
+import os
+# Set environment variables before importing TensorFlow
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+
 from flask import Flask, request, jsonify, send_from_directory
 import numpy as np
 import cv2
 from tensorflow.keras.models import load_model
-import os
 import tempfile
 import base64
 
