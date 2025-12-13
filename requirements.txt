@@ -48,7 +48,7 @@ sortedcontainers==2.4.0
 tensorboard==2.20.0
 tensorboard-data-server==0.7.2
 tensorflow==2.20.0
-tensorflow-io-gcs-filesystem==0.37.0
+# tensorflow-io-gcs-filesystem  # Let TensorFlow manage this dependency
 termcolor==2.4.0
 trio==0.30.0
 trio-websocket==0.12.2
