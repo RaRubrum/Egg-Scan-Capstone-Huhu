@@ -1,14 +1,21 @@
 import os
+import gc
 # Set environment variables before importing TensorFlow
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 from flask import Flask, request, jsonify, send_from_directory
 import numpy as np
 import cv2
-from tensorflow.keras.models import load_model
 import tempfile
 import base64
+
+# Import TensorFlow with memory optimization
+import tensorflow as tf
+tf.config.threading.set_intra_op_parallelism_threads(1)
+tf.config.threading.set_inter_op_parallelism_threads(1)
+from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 
@@ -18,7 +25,11 @@ model = None
 def get_model():
     global model
     if model is None:
+        # Force garbage collection before loading
+        gc.collect()
         model = load_model('final_hybrid_model.h5')
+        # Force garbage collection after loading
+        gc.collect()
     return model
 
 feature_names = [
