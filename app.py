@@ -54,10 +54,14 @@ def predict():
 
         # Process image
         img = preprocess_image(image_bytes)
+        print(f"Processed image shape: {img.shape}")
         img = np.expand_dims(img, axis=0)
+        print(f"Final input shape: {img.shape}")
 
         # Make prediction
         prediction = model.predict(img, verbose=0)
+        print(f"Prediction shape: {prediction.shape if hasattr(prediction, 'shape') else type(prediction)}")
+        print(f"Prediction content: {prediction}")
 
         # Model returns a list, first element contains yolk and white scores
         scores = prediction[0][0]  # Get the first output, then first batch item
