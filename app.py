@@ -12,8 +12,14 @@ import base64
 
 app = Flask(__name__)
 
-# Load the model once at startup
-model = load_model('final_hybrid_model.h5')
+# Load model lazily to reduce startup memory
+model = None
+
+def get_model():
+    global model
+    if model is None:
+        model = load_model('final_hybrid_model.h5')
+    return model
 
 feature_names = [
     "Yolk Score",
@@ -61,7 +67,7 @@ def predict():
         img = np.expand_dims(img, axis=0)
 
         # Make prediction
-        prediction = model.predict(img, verbose=0)
+        prediction = get_model().predict(img, verbose=0)
 
         # Model returns a list, first element contains yolk and white scores
         scores = prediction[0][0]  # Get the first output, then first batch item
