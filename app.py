@@ -84,8 +84,8 @@ def predict():
         scores = prediction[0][0]  # Get the first output, then first batch item
         scores = np.clip(scores, 0, 1)  # keep values between 0 and 1
 
-        yolk_score = scores[0] * 100
-        white_score = scores[1] * 100
+        yolk_score = float(scores[0]) * 100
+        white_score = float(scores[1]) * 100
         egg_quality_score = (yolk_score + white_score) / 2
 
         if egg_quality_score >= 70:

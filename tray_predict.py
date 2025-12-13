@@ -30,8 +30,8 @@ def predict_egg_quality(image_bgr, box):
     preds = model.predict(preprocess_crop(crop), verbose=0)[0][0]
     preds = np.clip(preds, 0, 1)
 
-    yolk = preds[0] * 100
-    white = preds[1] * 100
+    yolk = float(preds[0]) * 100
+    white = float(preds[1]) * 100
 
     egg_quality = (yolk + white) / 2
 
